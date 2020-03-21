@@ -13,4 +13,4 @@ My solution for UCLA's CS 35L Software Construction Laboratory, taught by Paul E
 | 7 | [7. Basic change management](http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign7.html) | 97 | List all new or modified files | |
 | 8 | [8. Change management spelunking and implementation](http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign8.html) | N/A | List all new or modified files | |
 | 9 | [9. SSH setup and use in applications](http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign9.html) | 100 | List all new or modified files | |
-| 10 | [10. Research and development in computing]http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign10.html | 100 | List all new or modified files | |
+| 10 | [10. Research and development in computing](http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign10.html) | 100 | List all new or modified files | |
