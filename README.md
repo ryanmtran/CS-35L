@@ -4,8 +4,8 @@ My solution for UCLA's CS 35L Software Construction Laboratory, taught by Paul E
 
 | Assignment | Project Specifications | Score | Comments |
 | --- | --- | --- | --- |
-| Assignment 1 | http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign1.html | List all new or modified files | List all new or modified files |
-| Assignment 2 | http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign2.html | List all new or modified files | List all new or modified files |
+| 1 | http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign1.html | List all new or modified files | List all new or modified files |
+| 2 | http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign2.html | List all new or modified files | List all new or modified files |
 | Assignment 3 | http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign3.html | List all new or modified files | List all new or modified files |
 | Assignment 4 | http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign4.html | List all new or modified files | List all new or modified files |
 | Assignment 5 | http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign5.html | List all new or modified files | List all new or modified files |
