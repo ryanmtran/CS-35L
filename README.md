@@ -4,7 +4,7 @@ My solution for UCLA's CS 35L Software Construction Laboratory, taught by Paul E
 
 | Assignment | Project Specifications | Score | Class Avg | Comments |
 | --- | --- | --- | --- | --- |
-| 1 | [1. Getting to know your system](http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign1.html) | 99 | | |
+| 1 | [1. Getting to know your system](http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign1.html) | 99 | 96 | |
 | 2 | [2. Shell scripting](http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign2.html) | 98 | 60| |
 | 3 | [3. Modifying and rewriting software](http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign3.html) | 99 | 81 | |
 | 4 | [4. C programming and debugging](http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign4.html) | 95 | 64| For me: incomplete bug fix: -5, hw: 10/10 |
