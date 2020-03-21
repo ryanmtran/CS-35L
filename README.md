@@ -3,7 +3,7 @@ My solution for UCLA's CS 35L Software Construction Laboratory, taught by Paul E
 
 
 | Assignment | Project Specifications | Score | Comments |
-| --- | --- |
+| --- | --- | --- | --- |
 | Assignment 1 | List all new or modified files | List all new or modified files | List all new or modified files |
 | Assignment 2 | Show file differences that haven't been staged | List all new or modified files | List all new or modified files |
 | Assignment 3 | List all new or modified files | List all new or modified files | List all new or modified files |
