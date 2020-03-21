@@ -4,7 +4,7 @@ My solution for UCLA's CS 35L Software Construction Laboratory, taught by Paul E
 
 | Assignment | Project Specifications | Score | Class Median | Comments |
 | --- | --- | --- | --- | --- |
-| 1 | http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign1.html | 99 | | |
+| 1 | [Heading](http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign1.html) | 99 | | |
 | 2 | http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign2.html | 98 | | |
 | 3 | http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign3.html | 99 | List all new or modified files | |
 | 4 | http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign4.html | 95 | | For me: incomplete bug fix: -5, hw: 10/10 |
