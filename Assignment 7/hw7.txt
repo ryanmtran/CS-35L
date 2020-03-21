@@ -1,0 +1,144 @@
+Ryan Tran
+UID: 905099275
+Assignment 7 Homework
+===========================================================================
+
+2. Note that my diffutils is in the directory thirdDir, which is in
+the directory diffutils1. This is because I ran into an error previously where
+I ran out of space in my terminal, and restarted the process of making changes
+to diffutils.
+ 
+cd thirdDir
+cd diffutils1
+
+I then proceeded to checkout version3.0 of diffutils into a new branch named
+quote
+git checkout -b quote v3.0
+
+3. I then installed changes into my new branch by running the following patch
+command:
+patch -p1 < quote-3.0-patch.txt
+
+5. I proceeded to emacs into all 6 of the .c files that were modified in git
+status, enterting the command 
+C-x 4 a
+to create changelogs for the following 6 files:
+cmp.c
+diff.c
+diff3.c
+dir.c
+sdiff.c
+util.c
+
+6. I then committed my changes by executing the following command:
+git commit -aF ChangeLog
+
+The -a flag stages all our files, while the -F command takes the commit
+message from the given file.
+
+7. As indicated by the specs, I utiized the command git format-patch
+to generate a file formatted-patch.txt:
+git format-patch -1 --stdout > formatted-patch.txt
+
+8.
+I first made a directory called HomeworkQ8Verify
+mkdir HomeworkQ8Verify
+cd HomeworkQ8Verify
+I then cloned a new repository from the website
+git clone ~eggert/src/gnu/diffutils 
+
+
+cd diffutils
+I then checked out a branch called patchery
+git checkout -b patchery v3.0
+
+I then went into my diffutils1 and moved my formatted-patch.txt file to my new
+directory with my fresh version of diffutils
+
+cd ..
+cd diffutils1
+mv formatted-patch.txt /u/cs/ugrad/minh/CS35L/Assignment7/thirdDir/HomeworkQ8Verify/diffutils
+
+I then applied the patch in my diffutils that was in HomeworkQ8Verify, 
+as specified by the directions in the specifications:
+git am formatted-patch.txt
+
+I then ran the commands to build the resulting modified version of diffutils:
+./bootstrap
+wget http://web.cs.ucla.edu/classes/winter20/cs35L/assign/diffutils-gets.diff
+patch -p0  < diffutils-gets.diff
+./configure
+make
+make check
+
+I then proceeded to test the functionality of the commands by changing
+directory into src:
+
+cd src
+
+I then ran the first command:
+./src/diff . -
+
+which outputted:
+./src/diff: cannot compare '-' to a directory
+
+I then ran the second command:
+./src/diff --help
+
+which outputted the correct functionality in which ` were replaced with '.
+
+9.
+I then ran the command:
+make distdir
+to verify that the ChangeLog entry worked
+
+I inspected the ChangeLog by executing the command:
+emacs diffutils*/ChangeLog,
+in which I saw that my ChangeLog was sucessfully updated with the 6 comments
+I had previously made.
+
+10.
+As indicated by my TA in lecture, I proceeded to change directories into
+~eggert/src/gnu/ by executing the command:
+
+cd ~eggert/src/gnu/
+
+I then changed direcotry into emacs-CS-35L:
+
+cd emacs-CS-35
+
+I then got an error when running gitk:
+Application initialization failed: no display name and no $DISPLAY environment variable
+Error in startup script: no display name and no $DISPLAY environment variable
+    while executing
+"load /usr/lib64/tk8.5/../libtk8.5.so Tk"
+    ("package ifneeded Tk 8.5.13" script)
+    invoked from within
+"package require Tk"
+    (file "/usr/local/cs/bin/gitk" line 10)
+
+I then proceeded to download Xmimg, as specified by piazza when individuals
+ran into a similar error, and ran the same commands previously
+
+cd ~eggert/src/gnu/
+cd emacs-CS-35L
+gitk
+
+I then found the newest commit no more recent than January 25th to be a commit
+made by Trevor Murphy <trevor.m.murphy@gmail.com> which was made on 
+2015-01-25 23:56:37 and was 
+lisp/gnus/nnimap.el Allow using the Google X-GM-LABELS, if present
+
+
+The description of the changes Trevor made is in the leftmost top window,
+the author is in the middle upmost window, and the timestamp of the update
+is in the rightmost upper window. 
+
+Furthermore, the window below the top windows has a scrollview. On the top of
+the scrollview window, there exists an  overall summary of the status of the
+commit of the user (including the author, committer, parent, child, branches, 
+follows, and precedes). Below that in the scrollbar window, the window 
+showcases the differences that the user made, in the format of diff file 
+syntax.  Lastly, the window to the right of this scrollbar window 
+is labelled Comments, which showcases our changeLogs and all the files
+that were updated.

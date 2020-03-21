@@ -1,0 +1,224 @@
+Ryan Tran
+905099275
+Assignment 1
+Lab
+------------
+1. I used man man
+man -k
+
+2. I used the command which
+which mv: /usr/local/cs/bin/mv
+which sh: /usr/bin/sh 
+
+3.I used find /usr/bin -name ?r
+I then used man to find what tr, ar, and pr did
+
+tr-translate or deletes characters
+ar-create, modify, or extract from archives
+pr-convert text files for printing
+
+4. Using: ls -l /usr/bin/emacs
+/etc/alternatives/emacs
+
+5. Using: gcc -v
+gcc version 9.2.0 (GCC)
+
+Using: /usr/bin/gcc -v
+gcc version 4.8.5 20150623 (Red Hat 4.8.5-39) (GCC)
+
+To find why they are diffrent programs:
+Using which on gcc, I found the path of gcc, which was /usr/local/cs/bin/gcc
+
+I then knew that if the two paths have different inode numbers (according to lecture) they are diffrent programs.
+
+Using:ls -i /usr/local/cs/bin/gcc
+29908651 /usr/local/cs/bin/gcc
+
+Using: ls -i /usr/bin/gcc
+130644 /usr/bin/gcc
+
+The two diffrent gcc's have diffrent inode numbers, so they are diffrent programs.
+
+
+6. Using man chmod:
+ u+sx:
+u stands for the user who owns it
++ means selcted file mode bits to be added to existing file mode bits
+s means set user or group ID on execution
+x means execute or search for directories
+Thus, u+sx means adding the user the permissions to set user or group ID on execution and execute or search for directories. Both of these permissions are added to already existing file mode permissions
+
+o-w:
+o stands for others not in file group
+- means remove permission
+w means write
+Thus, o-w means removing other users not in the file group's permission to write
+
+7. Using: find /usr/local/cs -type d -mtime -28 
+         -mtime n means file's data was last modified n*24 hours ago. Considering there are 28 days in four weeks, the correct command for 4 weeks would be -mtime 28. I also used -type d to specify directory.
+/usr/local/cs
+/usr/local/cs/src/grep
+/usr/local/cs/src/grep/RCS
+/usr/local/cs/share/info
+/usr/local/cs/share/man/man1
+/usr/local/cs/bin
+/usr/local/cs/.del
+/usr/local/cs/.del/grep-3.3
+/usr/local/cs/grep-3.4
+/usr/local/cs/grep-3.4/share
+/usr/local/cs/grep-3.4/share/locale
+/usr/local/cs/grep-3.4/share/locale/af
+/usr/local/cs/grep-3.4/share/locale/af/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/be
+/usr/local/cs/grep-3.4/share/locale/be/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/bg
+/usr/local/cs/grep-3.4/share/locale/bg/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/ca
+/usr/local/cs/grep-3.4/share/locale/ca/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/cs
+/usr/local/cs/grep-3.4/share/locale/cs/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/da
+/usr/local/cs/grep-3.4/share/locale/da/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/de
+/usr/local/cs/grep-3.4/share/locale/de/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/el
+/usr/local/cs/grep-3.4/share/locale/el/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/eo
+/usr/local/cs/grep-3.4/share/locale/eo/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/es
+/usr/local/cs/grep-3.4/share/locale/es/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/et
+/usr/local/cs/grep-3.4/share/locale/et/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/eu
+/usr/local/cs/grep-3.4/share/locale/eu/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/fi
+/usr/local/cs/grep-3.4/share/locale/fi/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/fr
+/usr/local/cs/grep-3.4/share/locale/fr/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/ga
+/usr/local/cs/grep-3.4/share/locale/ga/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/gl
+/usr/local/cs/grep-3.4/share/locale/gl/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/he
+/usr/local/cs/grep-3.4/share/locale/he/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/hr
+/usr/local/cs/grep-3.4/share/locale/hr/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/hu
+/usr/local/cs/grep-3.4/share/locale/hu/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/id
+/usr/local/cs/grep-3.4/share/locale/id/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/it
+/usr/local/cs/grep-3.4/share/locale/it/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/ja
+/usr/local/cs/grep-3.4/share/locale/ja/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/ko
+/usr/local/cs/grep-3.4/share/locale/ko/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/ky
+/usr/local/cs/grep-3.4/share/locale/ky/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/lt
+/usr/local/cs/grep-3.4/share/locale/lt/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/nb
+/usr/local/cs/grep-3.4/share/locale/nb/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/nl
+/usr/local/cs/grep-3.4/share/locale/nl/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/pa
+/usr/local/cs/grep-3.4/share/locale/pa/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/pl
+/usr/local/cs/grep-3.4/share/locale/pl/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/pt
+/usr/local/cs/grep-3.4/share/locale/pt/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/pt_BR
+/usr/local/cs/grep-3.4/share/locale/pt_BR/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/ro
+/usr/local/cs/grep-3.4/share/locale/ro/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/ru
+/usr/local/cs/grep-3.4/share/locale/ru/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/sk
+/usr/local/cs/grep-3.4/share/locale/sk/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/sl
+/usr/local/cs/grep-3.4/share/locale/sl/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/sr
+/usr/local/cs/grep-3.4/share/locale/sr/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/sv
+/usr/local/cs/grep-3.4/share/locale/sv/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/th
+/usr/local/cs/grep-3.4/share/locale/th/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/tr
+/usr/local/cs/grep-3.4/share/locale/tr/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/uk
+/usr/local/cs/grep-3.4/share/locale/uk/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/vi
+/usr/local/cs/grep-3.4/share/locale/vi/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/zh_CN
+/usr/local/cs/grep-3.4/share/locale/zh_CN/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/locale/zh_TW
+/usr/local/cs/grep-3.4/share/locale/zh_TW/LC_MESSAGES
+/usr/local/cs/grep-3.4/share/man
+/usr/local/cs/grep-3.4/share/man/man1
+/usr/local/cs/grep-3.4/share/info
+/usr/local/cs/grep-3.4/bin
+
+
+8.
+280
+Step 1)
+Using which find, I found the path /usr/bin/find
+Step 2)
+Using find /usr/bin -type l | wc -l
+I found all the symbolic links and pipelined them into the wc -l command
+
+9.
+librom1394.so.0.3.0
+Step 1)
+Using cd /usr/lib64, I changed into the directory I needed to access so I could avoid using ls with the name
+Step 2)
+Using ls . -lta, I printed out the files that were sorted from newest to oldest in my directory, and librom1394.so.0.3.0 was the last file
+
+10.
+Using man locale:
+The  locale  command  displays information about the current locale, or all locales, on standard output. Locale gets it data for  each locale category, based on the settings of the environment variables that control the locale.
+
+11. Using C-h a:
+downcase-dwim                 M-x ... RET
+   Downcase words in the region, if active; if not, downcase word at
+   point.
+downcase-region               C-x C-l
+   Convert the region to lower case.  In programs, wants two
+   arguments.
+downcase-word                 M-l
+   Convert following word (or ARG words) to lower case, moving over.
+
+12.
+First I typed in emacs to see useful commands. Using C-h h, I found the C-h k command, which displays the command name run by a given key sequence. I then used this command with all the emacs commands given.
+'C-M-r' Do incremental search backward for regular expression.('isearch-backward-regexp').
+'C-M-s' Do incremental search forward for regular expression. ('isearch-forward-regexp').
+'C-M-t' Transpose two balanced equations, or runs the command transpose-sexps ('transpose-sexps').
+'C-M-u' Move backward out of one level of parentheses. ('backward-up-list').
+'C-M-v' Scroll the next window upwards ('scroll-other-window')     
+
+13.
+First I typed in emacs to see useful commands. Using C-h r, I accessed the manual and utilize C-s to search for 'C-g', where I found the description:
+
+'C-g' signals a quit command and is the way to get rid of a partially typed command, or a numeric argument that you don't want. Furthermore, if you are in the middle of a command that is running, 'C-g' stops the command in a relatively quick way.
+
+14.
+First I typed in emacs to see useful commands. Using C-h r, I accessed the manual and utilize C-s to search for 'Yank', where I found the description and keystrokes:
+
+"Yanking" means reinserting text previously killed.  The usual way to
+move or copy text is to kill it and then yank it elsewhere.
+
+'C-y'
+     Yank the last kill into the buffer, at point ('yank').
+
+15.
+Step 1.)cd /usr/bin
+Step 2.)emacs
+Step 3.)I did C-h a dired to find what it did and the keystroke necessary to evoke it:
+dired                         <menu-bar> <file> <dired>, C-x d
+   "Edit" directory DIRNAME--delete, rename, print, etc. some files in
+   it.
+Step 4.)I used C-x d 
+
+I then compared this to the output of ls -l
+
+I saw that using dired, the current directory(.) and the parent directory(..) were included in the output, whereas for ls -l, these cases were omitted. Additionally, for dired, we can edit the directory by deleting, renaming, printing, etc. Additionally, dired shows total used and available space, while ls -l does not.

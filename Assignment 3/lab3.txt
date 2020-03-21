@@ -1,0 +1,156 @@
+Ryan Tran
+UID: 905099275
+Laboratory 3
+========================================================
+
+1.)
+I first started lab 3 by grabbing the coreutils 8.29
+source code compressed tarball from the websited by 
+using the wget command on its url:
+
+wget ftp://ftp.gnu.org/gnu/coreutils/coreutils-8.29.tar.xz
+
+I then grabbed its signature from the website using
+the wget command on the signature's url:
+
+wget ftp://ftp.gnu.org/gnu/coreutils/coreutils-8.29.tar.xz.sig
+
+I then grabbed the GNU keyring from the website using 
+the wget command on the GNU keyring's url:
+
+wget https://ftp.gnu.org/gnu/gnu-keyring.gpg
+
+
+I finally ran the command
+gpg --verify --keyring ./gnu-keyring.gpg coreutils-8.29.tar.xz.sig
+as specfied by the project specifications, and this was my output:
+
+gpg: Signature made Wed 27 Dec 2017 10:29:05 AM PST using RSA key ID 306037D9
+gpg: /u/cs/ugrad/minh/.gnupg/trustdb.gpg: trustdb created
+gpg: Good signature from "Pádraig Brady <P@draigBrady.com>"
+gpg:                 aka "Pádraig Brady <pbrady@redhat.com>"
+gpg:                 aka "Pádraig Brady <pixelbeat@gnu.org>"
+gpg: WARNING: This key is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+Primary key fingerprint: 6C37 DC12 121A 5006 BC1D  B804 DF6F D971 3060 37D9
+
+As indicated from the warning, the key that was given is not certified
+with a trusted signature.
+
+2.)
+
+I then proceeded by untarring my file:
+
+tar -xvJf coreutils-8.29.tar.xz
+
+Entering my new directory coreutils-8.29, I decided to read through
+its contents, specificially in the file "INSTALL". I then proceeded to
+execute the following commands, as specified in the directions:
+
+I made a directory called installDir:
+mkdir installDir
+
+Inside my coreutilis-8.29 directory, I did the following command. The
+prefix was necessary so that I could execute the configure in the 
+temporary directory that I created.
+
+./configure --exec-prefix=/u/cs/ugrad/minh/CS35L/Assignment3/installDir
+
+
+I then executed the make command and make install to first compile the
+package and then install the program with corresponding data files
+and documentation:
+make
+make install
+
+At this step I ran into the problem:
+src/ginstall -c -m 644 ./doc/coreutils.info '/usr/local/share/info'
+src/ginstall: cannot create regular file '/usr/local/share/info/coreutils.info':
+Permission denied
+make[3]: *** [install-info-am] Error 1
+make[3]: Leaving directory `/w/home.25/cs/ugrad/minh/CS35L/Assignment3A/coreutil
+s-8.29'
+make[2]: *** [install-am] Error 2
+make[2]: Leaving directory `/w/home.25/cs/ugrad/minh/CS35L/Assignment3A/coreutil
+s-8.29'
+make[1]: *** [install-recursive] Error 1
+make[1]: Leaving directory `/w/home.25/cs/ugrad/minh/CS35L/Assignment3A/coreutil
+ s-8.29'
+
+I then decided to cd into:
+/usr/local/share
+I used the command ls -la info to display all the permissions
+I then executed chmod ugo+rwx to grant all permissions
+
+However, I was encountered with the error
+chmod: changing permissions of ‘info’: Operation not permitted
+
+3.)
+Entering my installDir directory, I went into bin and saw that there was an
+executable file called ls. To run it I simply entered:
+./bin/ls -aA
+
+From the output, we can see that the -a is overriding the -A, and printing 
+out '.' and '..' The output is as followerd:
+.  ..  bin  libexec  share
+
+4.)
+First I got the patch file and saved the link to my desktop. I then used 
+filezilla to transfer it to my coreutils-8.29 directory. Note that the 
+name of the patch is 0001-ls-A-now-overrides-a.patch. Going through man patch,
+I realized that I would have to call -p1 to get rid of values before some of
+my paths, such as 'a/' and 'b/' 
+
+patch -p1 < 0001-ls-A-now-overrides-a.patch
+
+I got the error:
+patching file NEWS
+Hunk #1 FAILED at 4.
+1 out of 1 hunk FAILED -- saving rejects to file NEWS.rej
+patching file src/ls.c
+Hunk #1 succeeded at 1900 (offset -3 lines).
+patching file tests/local.mk
+patching file tests/ls/a-option.sh
+
+As NEWS did not seem relevant for the patch of the ls command,
+and this ls command seemed to be successfully patched, I proceeded
+to step 5.
+
+5.)
+Following the project specifications, I entrered the command:
+make
+
+The  make  program uses  the  makefile  data  base  and the 
+last-modification  times of the files to decide which of the 
+files need to be  updated. This line is important because it implements
+the changes of the patch to coreutils.
+
+I was encountered with an error that prevented me from proceeding.
+The warning looked like this:
+WARNING: 'automake-1.15' is missing in your system'
+
+To fix this problem, I followed the steps outlined by piazza. I
+entered:
+autoreconf -fi
+
+autoreconf updates generated configuration files. The -f flag considers all 
+files obsolete and the -i copies missing auxiliary files. The purpsuse 
+of these lines is to fix the configuration files and errors indicated
+previously
+
+
+After that I reentered the command:
+make
+Which sucessfully ran and allowed me to move on to step 6.
+
+6.)
+For the testing of the patch, I first changed directory to src:
+cd src
+
+I then proceeded to execute the previously problematic ls command:
+./ls -aA
+
+The output of this command showed the contents of the directory,
+properly omitting the current directory '.' and the previous 
+directory '..'Consequenetly, we see that our patch fixed our
+previous bug. 

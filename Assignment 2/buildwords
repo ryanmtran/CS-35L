@@ -1,0 +1,25 @@
+#!/bin/bash
+
+grep '<td'  | #first get lines that start with <td and put into workspace
+sed  's/    //g' |  #get rid of spaces in the beginning
+sed  's/<td><br>//g' | #get rid of random line breaks
+sed  's/<td>//g' | #get rid of <td> tag
+sed  's/<\/td>//g'  | #get rid of ending </td> tag
+sed  '/^$/d' | #gets rid of new lines
+sed  's/?//g' | #get rid of question marks
+sed  's/<u>//g' | #get rid of the <u> tag
+sed  's/<\/u>//g' | #get rid of the ending <\u> tag
+sed  's/<small>//g' | #get rid of the <small> tag
+sed  's/<\/small>//g' | #get rid of the ending <\small> tag
+sed  '1,4d' | #deletes lines 1 to 4
+sed  's/<\/font>//g'  | #deletes the item <\font>
+sed  's/.*>//g' | #deletes items that are followed by a '>' symbol
+sed  n\;d | #deletes every other line
+sed  's/ *$//g' | #deletes spaces at the end of a line
+sed  's/-*$//g' | #deletes dashes at the end of a line
+sed  's/ /\n/g' | #replaces every instance of spaces with new line
+sed  's/-/\n/g' | #replaces every instance of dashes with new line
+sed  "s/\`/\'/g" |  #replaces okina with apostrophe
+tr '[:upper:]' '[:lower:]' | #turns all upper case to lower case
+sort -u #sorts our lines and removes duplicates in the end
+

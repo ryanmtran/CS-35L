@@ -1,0 +1,175 @@
+#!/bin/bash
+
+#Checks to see if given argument is a directory, and if not, 
+#prints out error accordingly
+dirErrorCheck(){
+    if [[ ! -d "${1}" ]]; then
+	1>&2 echo "Failure: Argument is not a directory"; exit 1;
+    elif [[ -L "${1}" ]]; then
+	1>&2 echo "Failure: Argument is a symbolic link"; exit 1;
+    elif [[ "${1}" == '-'* ]]; then 
+	1>&2 echo "Failure: Argument cannot start with a hyphen"; exit 1;
+    elif [[ ! -r "${1}" ]]; then
+	1>&2 echo "Failure: User does not have permission to read";
+    fi
+}
+
+fileVerify () {
+    file="${1}"
+    #We only want characters from the set a-zA-Z_.-
+    if [[ "${file}" =~ ^[A-Za-z_"."-]+$ ]]; then
+        :
+    else
+        #error 1
+        i=1
+    fi
+    #we do not want our directory to start with a dash
+    if [[ "${file}" == "-"* ]]; then
+        #error 2
+        i=2
+    fi
+    #Unless our directory is . or .., our directory cannot start with .
+    if [[ ! "${file}" == '.' ]] && [[ ! "${file}" == '..' ]]; then
+        #invalid if directory starts with .
+        if [[ "${file}" == '.'* ]]; then
+            #error 3
+            i=3
+        fi
+    fi
+    #We do not want our files to be more than 14 characters
+    if [ "${#file}" -ge 15 ]; then
+        #error 4
+        i=4
+    fi
+}
+
+
+#function that implements poorname functionality and also recursive, given the
+#number of arguments passed into it. If the number of arguments is 2, with the
+#second being recursive, then initiate recusive case
+poornames() {
+    #these next lines displays all the files that are 
+    #duplicated within our directory finds all the direct
+    #children from our directory
+    dir="${1}"
+    find "${dir}" -maxdepth 1 -mindepth 1 |
+    #sorts through all our items without regards to case
+    sort -f |
+    #outputs all the unique values in a case insensitive way and 
+    #prints all duplicated values
+    uniq -iD  |
+
+
+
+    #We need to read through all of our data that is duplicated to
+    #see if it is a  directory and if we should recursively call in in
+    #the recursive step, and if it's a directory, we append a '/'
+
+    while IFS="" read -r path || [ -n "${path}" ]
+    do
+         #We simply echo our path if our path is not a directory
+        if [[ ! -d "${path}" ]]; then
+            echo "${path}"
+            #otherwise append backslash to out path
+        else
+            echo "${path}"'/'
+        fi
+
+	#if file is not readable and directory
+      if [[ -d "${path}" ]] && [[ ! -r "${path}" ]] && [[ "$2" == '-r' ]]; then
+	    #if our file is not a symbolic link
+	    if [[ ! -L "${path}" ]]; then
+		1>&2 echo "Failure: User does not have permission to read";
+	    fi
+	fi
+	#recursive situation
+	#if file path is a directory, not a symbolic link, and the 
+	#second argument passed into our function was -r
+	if [[ -d "${path}" ]] && [[ ! -L "${path}" ]] && [[ "$2" == '-r' ]]; then
+            poornames "${path}" "-r"
+        fi
+        #####
+    done
+
+
+#these next lines extracts the items that were not 
+#duplicated from our list of direct files from a directory 
+#and pipes it intoour next command that looks for character 
+#violations
+    comm -23 <(find "${dir}" -maxdepth 1 -mindepth 1 |
+	sort -f | sort) <(find "${dir}" -maxdepth 1 -mindepth 1 |
+	sort -f | uniq -iD | sort) |
+    #iterates through all the files iteratively from previous output 
+    while IFS="" read -r path || [ -n "${path}" ]
+    do
+	filecomp="${path##*/}"
+	#counter that checks validity of each path
+	i=0
+	fileVerify "${filecomp}"	
+	
+	#if file is not readable and is a directory
+     if [[ -d "${path}" ]] && [[ ! -r "${path}" ]] && [[ "$2" == '-r' ]]; then
+	    #if our path is not a symbolic link
+	    if [[ ! -L "${path}" ]]; then
+		1>&2 echo "Failure: User does not have permission to read";
+	    fi
+	fi
+	#recursive situation
+        #if file path is a directory, not a symbolic link, and the second
+        # argument passed into our function was -r
+	if [[ -d "${path}" ]] && [[ ! -L "${path}" ]] && [[ "$2" == '-r' ]]; then
+	    poornames "${path}" "-r"
+	fi
+	
+	#if counter comes out of fileVerify changed, then there was a problem
+	if [ "${i}" -ne "0" ]; then
+	    #if our file path is not a directory simply echo our path
+	    if [[ ! -d "${path}" ]]; then
+		echo "${path}"
+		#otherwise append backslash to out path
+	    else
+		echo "${path}"'/'
+	    fi
+	fi
+    done
+}
+
+
+numArg="${#}"
+#Case statement for the number of arguments given to script
+case "${numArg}" in
+  #given 0 arguments
+  0)
+    dir='.'
+    poornames "${dir}"
+    ;;
+  #given 1 argument
+  1)
+    if [[ "${1}" == '-r' ]]; then
+        shift
+	dir='.'
+	secArg='-r'
+	poornames "${dir}" "${secArg}"
+    else
+	dir="${1}"
+	#checks to see if argument is not a directory
+	dirErrorCheck "${dir}"
+	poornames "${dir}"
+    fi
+    ;;
+  #given 2 arguemnts
+  2)
+    if [[ "${1}" == '-r' ]]; then
+	shift
+	dir="${1}"
+	dirErrorCheck "${dir}"
+	secArg='-r'
+	poornames "${dir}" "${secArg}"
+    else
+    1>&2 echo "Failure: Nonvalid Inputs for 2 Argument Case"; exit 1; 
+    fi
+    ;;
+  #given more than 2 arguments 
+  *)
+    1>&2 echo "Failure: Improper number of arguments"; exit 1;
+esac

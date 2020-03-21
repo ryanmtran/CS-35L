@@ -1,0 +1,369 @@
+Ryan Tran
+905099275
+Assignment 5 Report
+------------------------------------------------------------------
+Assignment 5 Lab:
+
+1.
+First I created a c file called tr2b.c
+
+For this project, I broke down the objective of tr2b.c. What we are
+trying to do is create a tr functionality that interprets data byte
+by byte from one string to another, taking strings from standard input
+and translating the byte translation garnered from the inputs, replacing
+the characters accordingly. This program is the buffered version.
+
+
+Then, I figured out with the arguments in main correspond to. Given:
+int main(int argc, char* argv[]):
+argc translates to the number of arguments passed in when running the
+executable. The caveat of that is that the number of arguments passed
+when running the executable after the ./output corresponds to argc-1.
+argv[] stores the arguments passed in.
+
+From there, I preformed error checks, as specified in the project.
+The errors that I accounted for are as followed:
+a. If the number of arguments after the ./a.out command is not
+equal to 2
+b. If the two inputted strings are not of same length
+c. If the first inputted string has inputs
+
+Lastly, I utilized the getChar() and putChar() command as specified
+in the project to read from standard input and write to standard input,
+outputting the changes specified by our "from" and "to" strings
+
+2.
+First I created a c file called tr2u.c
+
+Similarly to the previous program, I broke down the objective of tr2u.c.
+What we are trying to do is create a tr functionality that interprets 
+data byte by byte from one string to another, taking strings from 
+standard input and translating the byte translation garnered from the
+inputs, replacing the characters accordingly. This program is the
+unbuffered version.
+
+As indicated previously for:
+int main(int argc, char* argv[])
+argc translates to the number of arguments passed in when running the
+executable. The caveat of that is that the number of arguments passed
+when running the executable after the ./output corresponds to argc-1.
+argv[] stores the arguments passed in.
+
+From there, I preformed error checks, as specified in the project.
+The errors that I accounted for are as followed:
+a. If the number of arguments after the ./a.out command is not
+equal to 2
+b. If the two inputted strings are not of same length
+c. If the first inputted string has inputs
+
+Lastly, I utilized the read and write commands, in conjunction with a
+character of array of size 1 to read from standard input and write to
+standard input, outputting the changes specified by our "from" and
+"to" strings
+
+3.
+First to create a file with 5 million bytes, I created the following
+c program and directed the output to big.txt
+
+#include <unistd.h>
+#include<stdlib.h>
+#include<stdio.h>
+#include<string.h>
+
+int main() {
+  int i =0;
+  while(i<5000000) {
+    printf("%c", 'a');
+    i++;
+  }
+}
+
+I then compiled and ran my program, sending the output to big.txt
+gcc -g makeBigFile -o makeBigFile.txt
+./makeBigFile > big.txt
+
+
+3a.) Copying One File to Another
+
+Buffered input output (tr2b.c):
+Strace when copying one file to another:
+strace -c ./tr2b 'a' '1' < big.txt > bufTrace1.txt
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 71.83    0.003364           6       611           write
+ 23.34    0.001093           2       613           read
+  1.52    0.000071           8         9           mmap
+  1.15    0.000054          14         4           mprotect
+  0.83    0.000039          39         1           munmap
+  0.64    0.000030           8         4           fstat
+  0.51    0.000024          12         2           close
+  0.17    0.000008           8         1           arch_prctl
+  0.00    0.000000           0         2           open
+  0.00    0.000000           0         1           brk
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         1           execve
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.004683                  1250         1 total
+
+
+Essentially, strace runs a specified command until it exits and records
+the system calls made by a process and signals which a received 
+by a process. The -c flag is necessary for the extrapolation of count time,
+calls, and errors for each  system  call and the reporting of a summary  
+on program exit.
+
+
+Unbuffered Input Output (tr2u.c):
+Strace when copying one file to another:
+strace -c ./tr2u 'a' '1' < big.txt > uBufTrace1.txt
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 55.70   29.366873           6   5000000           write
+ 44.30   23.351821           5   5000002           read
+  0.00    0.000059          15         4           mprotect
+  0.00    0.000038          38         1           munmap
+  0.00    0.000000           0         2           open
+  0.00    0.000000           0         2           close
+  0.00    0.000000           0         2           fstat
+  0.00    0.000000           0         7           mmap
+  0.00    0.000000           0         1           brk
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00   52.718791              10000024         1 total
+
+3b.) Copying file to terminal
+Buffered input output (tr2b.c)
+strace -c ./tr2b 'a' '1' < big.txt
+
+time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 90.31    0.022118           5      4883           write
+  8.97    0.002197           4       613           read
+  0.25    0.000062           7         9           mmap
+  0.11    0.000028          14         2           open
+  0.11    0.000027           7         4           mprotect
+  0.08    0.000020           5         4           fstat
+  0.07    0.000018          18         1         1 access
+  0.04    0.000011          11         1           munmap
+  0.03    0.000007           4         2           close
+  0.01    0.000003           3         1           arch_prctl
+  0.00    0.000000           0         1           brk
+  0.00    0.000000           0         1           execve
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.024491                  5522         1 total
+
+Unbuffered Input Output (tr2u.c)
+strace -c ./tr2u 'a' '1' < big.txt
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 56.38   28.348540           6   5000000           write
+ 43.62   21.936709           4   5000002           read
+  0.00    0.000093          13         7           mmap
+  0.00    0.000052          52         1         1 access
+  0.00    0.000028           7         4           mprotect
+  0.00    0.000020          10         2           open
+  0.00    0.000011          11         1           brk
+  0.00    0.000010          10         1           munmap
+  0.00    0.000008           4         2           fstat
+  0.00    0.000006           3         2           close
+  0.00    0.000003           3         1           arch_prctl
+  0.00    0.000000           0         1           execve
+------ ----------- ----------- --------- --------- ----------------
+100.00   50.285480              10000024         1 total
+
+4.
+Time of Buffered Version (tr2b):
+time ./tr2b 'a' '1' < big.txt > bufTrace1.txt
+real    0m0.214s
+user    0m0.157s
+sys     0m0.014s
+
+Time of Unbuffered Version (tr2c):
+time ./tr2u 'a' '1' < big.txt > uBufTrace1.txt
+real    0m10.576s
+user    0m1.517s
+sys     0m9.013s
+
+Evidently, the unbuffered version takes drastically more time to
+execute, when copying the same amount of data
+
+-------------------------------------------------------------------------
+
+Homework Portion:
+1.
+Firstly, I made the files that I would utiize to preform the sfrobu tests.
+
+To make the empty file, I simply did:
+emacs empty
+and saved the file
+
+To make the files of varying line sizes, I simply made a c script that 
+printed a character and new line for the amount of lines we wanted
+
+For this program here, I am printing out 100 lines.
+int main() {
+  int i =0;
+  while(i<100) {
+    printf("a\n");
+    i++;
+  }
+}
+
+I then ran my c program, and sent the output to a file called 100Lines.txt.
+I repeated this process to make files 10000, and 1000000 lines long
+
+Utilizing the time command, I proceeded to run the differences between
+my sfrobu and sfrob programs
+
+0 Lines:
+Sfrobu Program:
+time ./sfrobu < empty > output.txt
+
+real    0m0.003s
+user    0m0.000s
+sys     0m0.002s
+
+Sfrob Program:
+time ./sfrob < empty > output.txt
+
+real    0m0.002s
+user    0m0.000s
+sys     0m0.001s
+
+100 Lines:
+Sfrobu Program:
+time ./sfrobu < 100Lines.txt > output.txt
+
+real    0m0.003s
+user    0m0.000s
+sys     0m0.002s
+
+Sfrob Program:
+time ./sfrob < 100Lines.txt > output.txt
+
+real    0m0.003s
+user    0m0.000s
+sys     0m0.001s
+
+10000 Lines:
+Sfrobu Program:
+time ./sfrobu < 10000Lines.txt > output.txt
+
+real    0m0.028s
+user    0m0.005s
+sys     0m0.020s
+
+Sfrob Program:
+time ./sfrob < 10000Lines.txt > output.txt 
+real    0m0.005s
+user    0m0.002s
+sys     0m0.001s
+
+1000000 Lines:
+Sfrobu Program:
+time ./sfrobu < 1000000Lines.txt > output.txt
+
+real    0m2.486s
+user    0m0.280s
+sys     0m2.187s
+
+Sfrob Program:
+time ./sfrob < 1000000Lines.txt > output.txt
+
+real    0m0.138s
+user    0m0.104s
+sys     0m0.007s
+
+
+In order to find CPU time cost as a function of the number of input lines,
+I mapped the number of lines and the time of the system calls in excel,
+making a graph and using the trendline equation feature to find the
+equation that modelled this information. I saw that the relationship
+looked polynomial, so I selected the polynomial feature accordingly.
+Below are the data points I plotted the following data. I also saw
+that there was a huge disparity between the 10000 and 100000 lines 
+data, so I ran sfrobu with 100000 lines to fill in the data in between
+and yield a more precise function
+
+Lines 	  Time
+0	  0.002s
+100 	  0.002s
+10000	  0.020s
+100000	  0.219s
+1000000	  2.187s
+
+For my equation, I got:
+y = 3e-15x^2 + 2e-06x + 4e-5
+
+2. Using the strace command, I ran sfrobu on inputs of varying sizes:
+
+0 lines:
+strace -c ./sfrobu < empty > output.txt
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+  0.00    0.000000           0         2           read
+  0.00    0.000000           0         2           open
+  0.00    0.000000           0         2           close
+  0.00    0.000000           0         3           fstat
+  0.00    0.000000           0         7           mmap
+  0.00    0.000000           0         4           mprotect
+  0.00    0.000000           0         1           munmap
+  0.00    0.000000           0         4           brk
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.000000                    28         1 total
+
+100 lines:
+strace -c ./sfrobu < 100Lines.txt > output.txt
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 56.68    0.000382           2       201           write
+ 14.39    0.000097          14         7           mmap
+  6.97    0.000047          12         4           brk
+  6.08    0.000041          41         1           execve
+  5.64    0.000038          19         2           open
+  3.41    0.000023           6         4           mprotect
+  2.52    0.000017          17         1         1 access
+  1.78    0.000012           3         4           fstat
+  1.19    0.000008           8         1           munmap
+  0.59    0.000004           2         2           read
+  0.59    0.000004           2         2           close
+  0.15    0.000001           1         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.000674                   230         1 total
+
+1000000 lines:
+strace -c ./sfrobu < 100000Lines.txt > output.txt
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 99.96    0.917541           5    200001           write
+  0.02    0.000139          70         2           read
+  0.01    0.000078          26         3           munmap
+  0.00    0.000045           5         9           mmap
+  0.00    0.000029           7         4           mprotect
+  0.00    0.000012           3         4           fstat
+  0.00    0.000008           4         2           open
+  0.00    0.000006           3         2           close
+  0.00    0.000006           2         4           brk
+  0.00    0.000003           3         1           arch_prctl
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         1           execve
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.917867                200034         1 total
+
+From the strace, commands, I can deduce that the sfrobu uses brk
+to allocate memory. The reason why, is because for our regular file
+case, we called the same number of memory allocation functions for
+each input, so I simply looked for the command that had the same
+number of calls for every input case I put in. Looking at the man
+pages of brk, common arguments that are passed in are pointers or
+integers. What brk does is that it changes the end of a process's
+data segment, therby allocating memory. If given a pointer,
+the end of the data segment is changed to the value passed in
+by the pointer. If sbrk is given an integer, the data space is
+incremented by the number of bytes of the integer passed in. 

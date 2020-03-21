@@ -1,0 +1,269 @@
+Ryan Tran
+UID: 905099275
+Laboratory 7
+============================================================================
+1. git clone ~eggert/src/gnu/diffutils
+2. git log > git-log.txt
+3. git tag > git-tags.txt
+4. First, to find the commit entitled “maint: quote 'like this' or "like 
+this", not `like this'”, I opened git-log.txt 
+I then proceeded to execute the command:
+C-s to search for the quote. Correspondingly, the commit is:
+62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f
+In order to create the patch, I executed the following command:
+
+git show 62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f > quote-patch.txt
+
+5. I then checked out version 3.0 of diffutils from my repository:
+git checkout v3.0
+
+6. I then proceeded to apply my patch:
+patch -p1 < quote-patch.txt
+
+Below are the problems that occured:
+Hunk #1 FAILED at 9.
+Hunk #3 FAILED at 60.
+2 out of 3 hunks FAILED -- saving rejects to file README.rej
+can't find file to patch at input line 175
+Perhaps you used the wrong -p or --strip option?
+
+patching file TODO
+can't find file to patch at input line 198
+Perhaps you used the wrong -p or --strip option?
+
+patching file doc/diagmeet.note
+can't find file to patch at input line 222
+Perhaps you used the wrong -p or --strip option?
+
+can't find file to patch at input line 35
+Perhaps you used the wrong -p or --strip option?
+
+Hunk #1 FAILED at 9.
+Hunk #3 FAILED at 60.
+2 out of 3 hunks FAILED -- saving rejects to file README.rej
+can't find file to patch at input line 175
+Perhaps you used the wrong -p or --strip option?
+
+patching file TODO
+can't find file to patch at input line 198
+Perhaps you used the wrong -p or --strip option?
+
+patching file doc/diagmeet.note
+can't find file to patch at input line 222
+Perhaps you used the wrong -p or --strip option?
+
+can't find file to patch at input line 235
+Perhaps you used the wrong -p or --strip option?
+
+Hunk #10 FAILED at 876.
+Hunk #11 FAILED at 906.
+Hunk #12 FAILED at 942.
+Hunk #6 FAILED at 433.
+
+7. I then proceeded to execute the command git status:
+# HEAD detached at v3.0
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#       modified:   NEWS
+#       modified:   README
+#       modified:   TODO
+#       modified:   doc/diagmeet.note
+#       modified:   ms/config.bat
+#       modified:   ms/config.site
+#       modified:   po/en.po
+#       modified:   src/analyze.c
+#       modified:   src/cmp.c
+#       modified:   src/context.c
+#       modified:   src/diff.c
+#       modified:   src/diff.h
+#       modified:   src/diff3.c
+#       modified:   src/dir.c
+#       modified:   src/ifdef.c
+#       modified:   src/io.c
+#       modified:   src/sdiff.c
+#       modified:   src/side.c
+#       modified:   src/system.h
+#       modified:   src/util.c
+#       modified:   tests/help-version
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#       NEWS.orig
+#       README-hacking.orig
+#       README-hacking.rej
+#       README.orig
+#       README.rej
+#       cfg.mk.orig
+#       cfg.mk.rej
+#       git-log.txt
+#       git-tags.txt
+#       ms/config.site.orig
+#       quote-patch.txt
+#       src/cmp.c.orig
+#       src/context.c.orig
+#       src/diff.c.orig
+#       src/diff.c.rej
+#       src/diff.h.orig
+#       src/diff3.c.orig
+#       src/diff3.c.rej
+#       src/dir.c.orig
+#       src/sdiff.c.orig
+#       src/system.h.orig
+#       src/util.c.orig
+#       tests/help-version.orig
+no changes added to commit (use "git add" and/or "git commit -a")
+
+8. I learned the emacs functions specified on the project specs.
+
+9. First I went into the following files with emacs: 
+src/diff.h
+doc/diagmeet.note
+ms/config.bat
+ms/config.site
+NEWS
+po/en.po
+README
+TODO
+src/system.h
+tests/help-version
+
+and executed the emacs command 
+C-x v u. I entered yes when prompted with the yes or no question
+
+I then used the following c files and went into them using emacs:
+src/analyze.c
+src/cmp.c
+src/context.c
+src/diff.c
+src/diff3.c
+src/dir.c
+src/ifdef.c
+src/io.c
+src/sdiff.c
+src/side.c
+src/util.c
+
+I then proceeded to execte the commands C-x v = command in all of my c files.
+I noticed that the chaneges corresponded to lines. Thus, I went to the 
+corresponding lines to implement the changes necessitated utilizing M-gg, 
+undoing all changes other than character string constants. The following
+are the lines that I modified. Note that the lines correspond to the lines
+in the diff file, and that the lines actually changed in the c files
+is the number denoted plus three.
+
+analyze.c: 38, 251, 595
+cmp.c: 36, 364,365, 377
+context.c: 159, 289, 393, 431, 459
+diff.c: 40, 57, 58, 59, 92, 98
+diff3.c: 35, 159, 1475
+dir.c: 84, 125, 234
+ifdef.c: 132
+io.c: 57, 60
+sdiff.c: 35, 92, 747
+side.c: 292, 302, 310
+util.c: 27, 121, 146, 149, 190, 241, 270, 650
+
+10. I then proceeded to go into my rej files, which were diff.c.rej and
+diff3.c.rej. 
+
+I then mannually updated the changes in my c files accordingly, utilizing 
+M-gg to go to the specified lines and make changes. It is important to note
+that the lines do not necessarily match up, which is probably why the patch
+did not make the changes we wanted. We fix this issue by manually making the
+changes ourselves. The lines that we utilize M-gg for are not totally accurate,
+but give a rough idea of where the change we need to make likely is. I utilized
+C-s as well to find the correct lines if the lines from the diff file did not
+give me a good idea
+
+diff3.c: 433
+diff.c: 876, 906, 911, 921 (using C-s), 923 (using C-s)
+
+11. I then proceeded to execute:
+git clean -f 
+to remove all untracked files
+
+12. I then proceeded to run git status to see the number of modifed files:
+git status
+# HEAD detached at v3.0
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#       modified:   src/cmp.c
+#       modified:   src/diff.c
+#       modified:   src/diff3.c
+#       modified:   src/dir.c
+#       modified:   src/sdiff.c
+#       modified:   src/util.c
+#
+
+Evidently, there were six modified files.
+
+I then ran:
+git diff > quote-3.0-patch.txt 
+to generate my diff file, which was 327 lines
+
+13.
+To build the resulting modified version of diffutils, I did the following 
+commands:
+./bootstrap
+wget http://web.cs.ucla.edu/classes/winter20/cs35L/assign/diffutils-gets.diff
+patch -p0  < diffutils-gets.diff
+./configure
+make
+make check
+
+Upon running make check, I got the following errors:
+/bin/sh: /bin/sh: cannot execute binary file
+make[3]: *** [basic.log] Error 126
+make[3]: Leaving directory `/w/home.25/cs/ugrad/minh/CS35L/Assignment7/thirdDir/diffutils1/tests'
+make[2]: *** [check-TESTS] Error 2
+make[2]: Leaving directory `/w/home.25/cs/ugrad/minh/CS35L/Assignment7/thirdDir/diffutils1/tests'
+make[1]: *** [check-am] Error 2
+make[1]: Leaving directory `/w/home.25/cs/ugrad/minh/CS35L/Assignment7/thirdDir/diffutils1/tests'
+make: *** [check-recursive] Error 1
+
+I then executed the commands:
+./src/diff . - and
+./src/diff --help
+
+Evaluating the output of these commands, I saw that the ` were replaced with ',
+verifying the validity of my changes.
+
+14.First, I copied the original sorce code into a directory diffutils-3.0
+and the latter source code into a directory called diffutils-3.0-patch:
+
+I first created my two directories
+mkdir diffutils-3.0-patch
+mkdir diffutils-3.0
+
+I then cloned the diffutils directory and put it in the directory diffutilsTemp
+git clone ~eggert/src/gnu/diffutils diffutilsTemp
+
+I then changed into my diffutilsTemp and checkedout the v3.0 branch
+cd diffUtilsTemp
+git checkout v3.0
+
+I then proceeded to copy the source code into the diffutils-3.0 file we
+created:
+cp ./src/*.c /u/cs/ugrad/minh/CS35L/Assignment7/thirdDir/diffutils-3.0
+
+I then went into my patched version, which is in the directory diffutils
+cd diffutils
+cp ./src/*.c /u/cs/ugrad/minh/CS35L/Assignment7/thirdDir/diffutils-3.0-patch
+
+I then preformed the following command
+./diffutils/src/diff -pru diffutils-3.0 diffutils-3.0-patch/ >
+quote-3.0-test.txt
+
+as specified by the project specs
+
+15. 
+I then utilized the command:
+diff -u quote-3.0-test.txt diffutils/quote-3.0-patch.txt
+While there were many differenes between the two files, it is clear that the
+changes are trivial, because they mostly coincide with differences in paths
+and trivial changes in quotation marks.

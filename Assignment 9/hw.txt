@@ -1,0 +1,68 @@
+Ryan Tran
+905099275
+Homework 9
+==============================================================================
+For the homework, I first exported the public key into a file called
+hw-pubkey.asc
+
+In order to create a doc signature, I did the following command:
+gpg2 --output doc.sig --detach-sig hw-pubkey.asc
+I then entered my paraphrase
+I then verified by detached signature by executing the following:
+gpg2 --verify doc.sig hw-pubkey.asc
+
+Sure enough, the output of the command executed the following text:
+gpg: Signature made Fri 13 Mar 2020 11:46:53 PM PDT using DSA key ID 2AD7103A
+gpg: Good signature from "RyanTran (Hello) <ryanmtran922@gmail.com>"
+
+Verifying the success of our homework
+
+
+1.Suppose the other teams really had been observing all the bytes going across
+the network in your lab exercise. Is your resulting network still secure? If
+so, explain why, and explain whether your answer would change if (1) you 
+assumed the other teams had also tapped your keyboards after you completed all
+client-server setup and had thereby obtained your team's keystrokes during 
+later operation, or (2) you are booting off USB and you assume the other teams
+temporarily had physical control of the USB. If not, explain any weaknesses of
+your team's setups, focusing on possible attacks by such outside observers
+
+1. If the other teams had been observing all the bytes across the network
+in our lab exercise, the resulting network would still be secure. The reason
+for this is because the linux servers's encryption operate based off of a
+concept known as public-key encryption. In essence, public-key encryption is
+based off of a system made up of the public key and the private key. The
+public key allows for encryption of messages and is available for everyone. 
+Nevertheless, the private key is used for the decryption of messages, and only
+the owner will be able to decrypt the data. Thus, even if a malicious body 
+had the bytes, their lack of the decryption key would make the information
+meaningless for them.
+
+(1)If an individual was able to record our team's keystrokes, this would make
+it so that our resulting network is still secure. The reason for this is
+because if the malicious body obtained our team's keystrokes, although
+they could have our passphrase, they wouldn't be able to leverage this to
+infiltrate our data. The purpose of a passphrase is to protect private key 
+files, adding an extra layer of security to protection. Nevertheless, unless 
+an indvidual had access to our computer, they would not be able to access
+our private key files. Moreover, many ssh's do not even have passphrases,
+aiding to the argument that a passphrase is not indespensible for data
+protection.
+
+(2) If an individual had temporary physical control of the USB, this would
+change the answer I had previously, and the resulting network would now
+be insecure. Given that the user now has access to our USB, they have access
+to our .ssh folder, which would make it so that they had access to our 
+prviate key. Given the private key, an individual would be able to decrypt
+data, contributing to the insecurity of our network.
+
+2. The gpg --verify comand does not actually verify if an individual created
+a file in question, because all it does is compare the file in hand to the
+detached signature. The issue with this is that when a file is intercepted
+between stages of creation and interpretation of the creater of the file,
+an individual can add their own public key with a signature, therby obscuring
+the signature of the orginal creator. The solution to this issue would be
+the integration of a trusted third party to keep track of the creator of the
+original file, thereby permitting individuals who wish to access the
+information regarding the origin an ability to know if the signature was
+changed in intermediary steps of transmission.

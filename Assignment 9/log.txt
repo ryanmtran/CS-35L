@@ -1,0 +1,86 @@
+Ryan Tran
+905099275
+Laboratory 9
+=============================================================================
+
+First, to generate a keypair, I did the following command:
+ssh-keygen
+ENTER
+
+To create a paraphrase, I just entered a random word
+hello
+
+Note that according to the man pages, ssh-keygen coincides with authentication
+key generation, management, and conversion
+
+The output is as followed:
+The key's randomart image is:
++---[RSA 2048]----+
+|=+o..oo.     +   |
+|*=+..       . =  |
+|B*.=..     o E . |
+|o.+.o. +  . o    |
+|    o . S  . .   |
+|   o .  .   * .  |
+|  . + .. + = o   |
+|   * +  . =      |
+|    = ..         |
++----[SHA256]-----+
+
+I then changed directory into ~/.ssh:
+cd ~/.ssh
+
+I then listed the directory contents, including hidden files:
+ls -la
+
+I then opened id_rsa. I noted that id_rsa holds the private key.
+
+Coincidingly, I executed the command:
+eval $(ssh-agent)
+which gave me a pin:
+Agent pid 11601
+
+I then executed the command ssh-add and entered my paraphrase I had
+created previously:
+ssh-add
+hello
+According to the man pages, ssh-add adds private key identities to the
+authentication agent
+
+Coincidingly, the output of this command indicated:
+Identity added: /u/cs/ugrad/minh/.ssh/id_rsa
+
+I then executed the follwing command:
+ssh-copy-id 'minh@lnxsrv06.seas.ucla.edu'
+I then typed in my password for seasnet and the output of this command 
+executed the following:
+
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are 
+prompted now it is to install the new keys
+minh@lnxsrv06.seas.ucla.edu's password:
+Entered SEASNET Password
+
+The terminal outputted the following text:
+Number of key(s) added: 1
+
+Now try logging into the machine, with:  "ssh 'minh@lnxsrv06.seas.ucla.edu'"
+and check to make sure that only the key(s) you wanted were added.
+
+Note that according to the man pages, ssh-copy-id uses locally available keys
+to authorize logins on a remote machine
+
+In the ssh command, to make it so that hopping is possible, we utilize the -A 
+flag
+which allows for forwarding of the authentication agent connection:
+ssh -A 'minh@lnxsrv07.seas.ucla.edu'
+
+For the xeyes command, we simply utilize the -X flag. I incorporated the -A
+flag so that I could forward hop again and forward the authentication agent
+ssh -X -A 'minh@lnxsrv08.seas.ucla.edu'
+
+In order to open a remote terminal using ssh, granted we do not care about
+forward hopping, we simply ssh into the remote session that we configured:
+ssh lnxsrv06.seas.ucla.edu
+
+Sure enough, no password was requested for all these case
+

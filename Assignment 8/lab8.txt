@@ -1,0 +1,155 @@
+Laboratory 8
+Ryan Tran
+UID: 905099275
+==============================================================================
+
+First, I utilized the cd command to enter the directory specified by the
+project specs:
+cd  ~eggert/src/gnu/emacs-CS-35L
+
+1. To find the disk space required to represent the working files in this
+directory, I found the size of the entire repo minus the size of the .git
+directory, as this defines the working files in our repository.
+
+First I utilized du -h on the current directory I'm on
+du -h
+which yielded 509M
+The -h command was necessary so that the size would be printed in human 
+readable language.
+
+I then proceeded to change directories into .git, and executed the du -h
+command again
+cd .git
+du -h
+which yielded 350M
+Consequently, we see that the resulting size of the working files is
+159M.
+
+The size of the Git repository is 350M. 
+
+The file that takes up the most space is pack, which has the filepath
+./.git/objects/pack. The packfile is the largest becaue it contains all
+the objects that have been removed from the filesystem. Clearly, this would
+consume an immense amount of memory, as the packfile is retaining a system
+that allows an individual to access deleted information, which would be
+immensely large for grand-scale long-lasting projects
+
+2. First to find the number of remote branches, I did:
+git branch -r | wc
+I found that there were 177 lines, so there were 177 remote branches
+
+To find the number of local branches, I found the number of branches in 
+my repository, I did
+git branch -a | wc to find the number of local branches and remote branches,
+and I simply found the difference between the total number of lines from the 
+-a command with the answer I got previously
+
+git branch -a | wc
+Which yielded 353 lines. The difference I got was 176, so there are 176 local
+branches.
+
+3. To find the number of remote repositories, I utilized the command:
+git remote show
+which displayed the output
+origin
+
+Evidently, we see that there is only one repository remote to this one.
+Utilizing the -v flag for verbose, we are able to find where the origin 
+repository is
+git remote -v:
+
+origin  https://git.savannah.gnu.org/git/emacs.git (fetch)
+origin  https://git.savannah.gnu.org/git/emacs.git (push)
+
+4.
+I utilized the command git for-each-ref, to iterate over all the refs,
+utilizing the flags sort wnr count to display 10 of the files in 10 of
+the branches in sorted order of commit date, most recent first. For sort,
+equating the flag to the - sorts the information with most recent first and
+specifying comitterdate afterwards makes the program know we are doing this
+by the date that it was comitted. Equating --count with 10 prints out the
+first 10 outputs, and setting the pattern to comitterdate showcases the 
+matches that relate
+git for-each-ref --sort='-*committerdate' --count=10
+
+19aecd340b7b3ab54629b790ba70a90130bad63d commit refs/heads/master
+19aecd340b7b3ab54629b790ba70a90130bad63d commit refs/remotes/origin/HEAD
+19aecd340b7b3ab54629b790ba70a90130bad63d commit refs/remotes/origin/master
+d2873706749ef68803e79bab6109a534f4c9d23a commit refs/heads/scratch/joaot/make-completion-at-point-function
+d2873706749ef68803e79bab6109a534f4c9d23a commit refs/remotes/origin/scratch/joaot/make-completion-at-point-function
+dd3fa9411a28175f9a1a984a69cfa7162023c5df commit refs/heads/feature/windows-with-utils
+dd3fa9411a28175f9a1a984a69cfa7162023c5df commit refs/remotes/origin/feature/windows-with-utils
+8f22251e595d7598d6643b0d24bf5f409dc59fa8 commit refs/heads/scratch/completion-api
+8f22251e595d7598d6643b0d24bf5f409dc59fa8 commit refs/remotes/origin/scratch/completion-api
+8a4de19dfb52551a65c360a9346ede137d0fc6e8 commit refs/heads/scratch/a-modest-completion-redesign-proposal
+
+5. In order to find the number of commits in our master branch, I utilized
+the command git rev-list, in conjunction with the flag count, which prints
+out the number of commits that resulted from the output of this command.
+git rev-list --count master
+
+Correspondingly, the output was
+139583
+
+6. First, to find the number of commits that are in any branch, I utilized 
+git rev-list with the --all flag, which pretends as if all the refs along
+with HEAD are listed on the command line as <commit>
+git rev-list --all --coiunt
+47bdd84a0a9d20aab934482a64b84d0db63e7532
+ff9c6df4b0766bef72f6b1f4c8fca65737d9ad6b
+ce5584125c44a1a2fbb46e810459c50b227a95e2
+[minh@lnxsrv06 /u/cs/fac/eggert/src/gnu/emacs-CS-35L]$ git rev-list --all --count
+143910
+
+I then computed the ratio of the previously computed value, 139583 divided
+by 143910
+
+The percentage was 96.99 percent.
+
+7. I utilized the command git shortlog to summarize the git log output.
+Correspondingly, I utilized the flags -s to showcase a summary --since to
+show commits starting from 2013, and -n to sort by number of commits per author
+instead of alphabetically. I then piped this into head -10 to only show
+the first 10 lines.
+
+git shortlog -n -s --since="2013-01-01" | head -10:
+
+  3691  Eli Zaretskii
+  3644  Glenn Morris
+  3604  Paul Eggert
+  1806  Lars Ingebrigtsen
+  1784  Stefan Monnier
+  1571  Michael Albinus
+   619  Dmitry Gutov
+   576  Noam Postavsky
+   471  Alan Mackenzie
+   469  Juri Linkov
+
+8. I proceed to connect xming with my terminal. I then utilized gitk with the
+following commits to expore the relationshop between the commits
+	4ea37c2b8b0c5a68fde59770c3536195e0972217
+	977cd6cb28a37744966ec62f70cf62659f6f302a
+	625cee531623feddbe3174fad52c7db96ec60bb3
+	5490ccc5ebf39759dfd084bbd31f464701a3e775
+	0c06b93c1e467debd401eb0b3be4652fde14fa95
+	820739bbb572b30b6ce45756c9960e48dca859af
+	00e4e3e9d273a193620c3a4bb4914e555cb8e343
+	49cd561dc62ea6b3fbedab7aef0f020733f4cf09
+	abcb2e62dae6aa26308f7ac9efc89247f89cbe65
+	98ac36efe4ce4bd3a0bca76fc73ce6c7abaa4371
+
+
+I saw that:
+4ea37... was the parent of 977c...
+4ea37... was the parent of 625c...
+5490... was the grand grand parent of 4ea...
+0c06... was the grand parent of 5490...
+
+At this point, I saw that to identify if a commit was a merge commit it will
+have the format:
+     merge from...
+
+Going through the rest of the commits, I saw that the merge commits were:
+      0c06b93c1e467debd401eb0b3be4652fde14fa95
+      abcb2e62dae6aa26308f7ac9efc89247f89cbe65
+      98ac36efe4ce4bd3a0bca76fc73ce6c7abaa4371

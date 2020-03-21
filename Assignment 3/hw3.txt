@@ -1,0 +1,70 @@
+Ryan Tran
+UID: 905099275
+Homework 3
+============================================================================
+
+1.)
+Performace wise in terms of program speed, this new program works more
+optimally than the previous version, because it delinates cases and prints out
+less directories for special cases (when -A is after -a), instead of always
+printing out the . and .. directories whenever a -a flag was found. This
+improves performance, as it reduces the elapsed time and resouces neceessary
+to carry out this task. This patch additionally inproves performance, if an
+individual is  considering performance in terms of correctness. Any behavior 
+that does not execute the information or perform a functionality that as 
+intended is not performing optimally. In the context of this question, when an
+individual typed ls -a -A, instead of the -A overriding the -a behavior, the
+-a unequivocally held precedence over -A, no matter the order. Even more than
+that, 
+
+2.)
+One problem that could occur as a result of this patch, is that the company
+may have written code based off of the previously flawed version of ls. For
+instance, if the company created scripts or commands that utilized ls -a -A
+in order to grab the '.' or '..' directory, the output of this command would
+no longer include these instances. If an individual utilized the current or
+upper directory with this flawed ls command, it could catalyze and create 
+a snowball of errors, depending on the network and interconnectedness of
+programs.
+
+3.)
+Then running randline.py on an empty file, I got the following error:
+Traceback (most recent call last):
+  File "randline.py", line 70, in <module>
+    main()
+  File "randline.py", line 64, in main
+    sys.stdout.write(generator.chooseline())
+  File "randline.py", line 34, in chooseline
+    return random.choice(self.lines)
+  File "/usr/lib64/python2.7/random.py", line 274, in choice
+return seq[int(self.random() * len(seq))]  # raises IndexError if seq is empty
+
+As indicated in the last error, our program calls a a functionality in
+random.py. Because seq is empty, given that our file is empty, there is
+an index error that makes it so that our program cannot sucessfully carry
+out its functionality.
+
+4.)
+Upon entering python3 randline.py /dev/null, I got the following error:
+  File "randline.py", line 65
+    except IOError as (errno, strerror):
+                      ^
+SyntaxError: invalid syntax
+
+As shown from the above error, we can see that python3 follows different
+syntax rules than python2. Because of this, we are thrown an IOError, which
+elucidates the reality that, although similar, python2 scripts cannot
+be guaranteed to run sucessfully using python3.
+
+5.)
+When I evoke python2 instead of python3, I get the following error:
+File "shuf.py", line 11
+SyntaxError: Non-ASCII character '\xe2' in file shuf.py on line 11,
+but no encoding declared; see http://www.python.org/peps/pep-0263.html
+for details
+
+
+Upon further research, the reason for this is because Python 3 uses
+UTF-8 by default, Python 2 defaults to ASCII for source code. Evidently
+Python 3 and python 2 encompass different syntactical nuance that 
+don't guarantee portability between the two

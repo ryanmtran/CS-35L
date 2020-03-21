@@ -1,0 +1,199 @@
+Preliminary Steps.)
+
+export LC_ALL='C'
+
+sort /usr/share/dict/words > words
+
+wget http://web.cs.ucla.edu/classes/winter20/cs35L/assign/assign2.html
+
+Activity 1.)
+
+cat assign2.html | tr -c 'A-Za-z' '[\n*]' > file1.txt
+This command is replacing every instance not included in the set 
+indicated between the first set of single quotes with the value 
+indicated between the second set of single quotes
+
+cat assign2.html | tr -cs 'A-Za-z' '[\n*]' > file2.txt
+This command replaces sequnces of characters not included in the set 
+indicated between the first set of single quotes with the value 
+indicated between the second set of single quotes. The -s removes 
+duplicated values by replacing multiple occurences of an item with 
+a single occurence of it.
+
+cat assign2.html | tr -cs 'A-Za-z' '[\n*]' | sort > file3.txt
+This command takes the command described in the previous question
+ and pipelines it into sort, which sorts the lines alphabetically.
+
+cat assign2.html | tr -cs 'A-Za-z' '[\n*]' | sort -u > file4.txt
+This command is similar to the previous question, with the only 
+diffrence being that duplicated lines are removed.
+
+cat assign2.html | tr -cs 'A-Za-z' '[\n*]' | sort -u | comm - words 
+>file5.txt
+This command takes the previous command that sorted a file and 
+removed its duplicates and pipelines it into a command that compares
+it to the file indicated after 'comm -'. In its totality, comm takes 
+the two sorted files and makes three columns. The first column are 
+words found that exclusively belong to the first file. The second 
+column are words found that exclusively belong to the second file. 
+The third column are words that are shared between the two files.
+
+cat assign2.html | tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - words  
+> file6.txt
+This command does what the previous command did, except it supresses columns
+2 and 3. In essence, only column 1, which displays the words that exist
+exclusively in the first file (assign2.html) are shown.
+
+Activity 2.)
+
+wget https://www.mauimapp.com/moolelo/hwnwdshw.htm
+
+The premise is to write a script that incoprates a plethora of commands,
+pipelining each command to the next and eventually outputting our file 
+comprised of hawaiian characters. The objective is to remove all the extra
+information and have a pattern of english and hawaiian words interleaving
+each other so we can put in a command that deletes every other line. Then
+we would remove, translate, and sort the data according to the project
+specifications.
+
+grep '<td' hwnwdshw.htm | 
+First I grabbed all lines that started with <td.
+sed  's/    //g' |  
+I then got rid of spaces in the beginning of each line
+sed  's/<td><br>//g' |
+I then got rid of random line breaks
+sed  's/<td>//g' 
+I then got rid of <td> tag
+sed  's/<\/td>//g'  
+I then got rid of ending </td> tag at the end of the lines
+sed  '/^$/d' | 
+I then got rid of new lines
+sed  's/?//g' |
+I then got rid of question marks
+sed  's/<u>//g' | 
+I then got rid of the <u> tag
+sed  's/<\/u>//g' | 
+I then got rid of the ending <\u> tag
+sed  's/<small>//g' | 
+I then got rid of the <small> tag
+sed  's/<\/small>//g' | 
+I then got rid of the ending <\small> tag
+sed  '1,4d' | 
+I then deleted lines 1 to 4. The reason for this is because the first
+four lines had miscellaneous data that were not related to the english
+or hawaiian words we needed.
+sed  's/<\/font>//g'  | 
+I then deleted the item <\font>
+sed  's/.*>//g' | 
+I then deleted items that are followed by a '>' symbol. The reason for
+this is because some of the td tags were followed with items like 
+valign..., and we needed to find a way to delete this information
+iteratively
+
+At this point in time, we have removed all the extraneous information, 
+and our file is comprised strictly of hawaiian words and english words 
+interleaved. This is the step where we remove every other line:
+sed  n\;d |
+
+From here, we perform translations and deletions to clean up our data 
+and follow the project specfications about how specific words should 
+be broken down and how some characters should be morphed
+sed  's/ *$//g' | 
+I deleted spaces at the end of a line
+sed  's/-*$//g' | 
+I deleted dashes at the end of a line
+sed  's/ /\n/g' |
+ I replaced every instance of spaces with new line
+sed  's/-/\n/g' | 
+I replaced every instance of dashes with new line
+sed  "s/\`/\'/g" |  
+I replaced okina with apostrophe
+tr '[:upper:]' '[:lower:]' | 
+I turned all upper case to lower case
+sort -u
+I sorted my information, removing all duplicates in the process
+
+
+
+Activity 3.)
+First I created a hawaiian words checker command that emulated the same 
+format as ENGLISHCHECKER. I then ran my HAWAIIANCHECKER on the webpage 
+and put all the mispelled words into mispelledHWords.txt.
+
+cat assign2.html |
+Before putting our file into our HAWAIIANCHECKER, I changed the webpage 
+to lowecase letters
+tr '[:upper:]' '[:lower:]' |
+
+I then piplined this into the implemention of HAWAIIANCHECKER:
+
+#This first command takes the complement of the values in the set and 
+#replaces them with new lines
+tr -cs "[pk\'mnwlhaeiou]" '[\n*]' | 
+#This next command sorts out our values and removes repeated values
+sort -u | 
+#This next command takes the output from the input and makes a three
+#column file--the first being the words exclusively in the inputted file, 
+#the second column being the words exclusively in hwords, and the third 
+#column being the words found in both files. The -23 column removes the 
+#second and third column. In essence, we are outputting a file that have 
+#words comprised of valid hawaiian characters, but is not found in 
+#our hawaiian dictionary we made.
+comm -23 - hwords |
+
+I then removed empty lines, as they should not be counted as words and 
+inputted them into mispelledHwords.txt. 
+ sed '/^$/d' > mispelledHwords.txt
+Using the wc -l command, I checked the number of lines in mispelledHwords.txt 
+wc -l mispelledHwords.txt
+   Running HAWAIIANCHECKER on webpage output:
+   233
+
+I then used ENGLISHCHECKER on the webpage and removed empty lines. I sent
+my output to mispelledEwords.txt and counted the number of distinctly
+mispelled english words found on the webpage:
+cat assign2.html |
+tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - words |  sed '/^$/d' 
+>mispelledEwords.txt
+wc -l mispelledEwords.txt
+  Running ENGLISHCHECKER on webpage output:
+  93
+
+I then ran our HAWAIIANCHECKER on the output of hwords and puts all the 
+mispelled words into mispelledCheck.txt. I then checked the number of 
+mispelled words from the output. 
+cat hwords|
+tr '[:upper:]' '[:lower:]' | #turns all upper case to lower case
+tr -cs "[pk\'mnwlhaeiou]" '[\n*]' | sort -u | comm -23 - hwords 
+>mispelledCheck.txt
+wc -l mispelledCheck.txt
+  Checking HAWAIIANCHECKER with our hwords output:
+  0
+
+I then counted the number of distinct words on the webpage that ENGLISHCHECKER
+reported as misplled but HAWAIIANCHECKER did not. I acheived this by running 
+our mispelledEwords.txt file through the comm command, comparing it to 
+mispelledHwords.txt and removing columns 2 and 3. I counted the number 
+of lines of the output of this command.
+cat mispelledEwords.txt | comm -23 - mispelledHwords.txt > diff1.txt
+wc -l diff1.txt
+  
+  Number ENGLISHCHECKER reports as mispelled but HAWAIIANCHECKER does not:
+  88
+  Examples:
+  charset
+  basedefs
+
+I then counted the number of distinct words on the webpage the HAWAIIANCHECKER 
+reported as mispelled but ENGLISHCHECKER did not. I acheived this by running 
+our mispelledHwords.txt file through the comm command, comparing it to the 
+mispelledEwords.txt and removing columnds 2 and 3. I counted the number of 
+lines of the output of this command
+cat mispelledHwords.txt | comm -23 - mispelledEwords.txt > diff2.txt
+wc -l diff2.txt
+  Number HAWAIIANCHECKER reports as mispelled but ENGLISHCHECKER does not: 
+  228
+  Examples:
+  alen
+  ample
+

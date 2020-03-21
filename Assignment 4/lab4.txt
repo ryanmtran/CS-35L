@@ -1,0 +1,230 @@
+Laboratory 4
+Ryan Tran
+905099275
+
+======================================================================
+
+First I grabbed the old coreutils version by calling the given command:
+wget http://web.cs.ucla.edu/classes/winter20/cs35L/assign/
+coreutils-with-bug.tar.gz
+
+I then untarred the coreutils version with the given command:
+tar -xvf coreutils-with-bug.tar.gz
+
+
+I then made a directory to store our instiallation:
+mkdir InstallDir
+
+Inside my coreutils-with-bug directory I did the following command to
+initiate configuration. The prefix was necessary so that I could 
+execute the configure in the temporary directory I had created:
+./configure --prefix=/u/cs/ugrad/minh/CS35L/Assignment4/InstallDir
+
+I proceeded by executing the make command to first compile the package.
+make
+
+After the make command, I received the following error:
+In file included from utimecmp.c:41:0:
+utimens.h:2:5: error: conflicting types for 'futimens'
+ int futimens (int, char const *, struct timespec const [2]);
+     ^
+In file included from utimecmp.h:25:0,
+                 from utimecmp.c:25:
+/usr/include/sys/stat.h:373:12: note: previous declaration of 'futimens' was here
+ extern int futimens (int __fd, const struct timespec __times[2]) __THROW;
+            ^
+At this point, I decided to build the renaming patch. I did this by
+grabbing the patch file in my coreutils-with-bug directory with the wget
+command, combined with the address of the patch on the project page:
+
+wget http://web.cs.ucla.edu/classes/winter20/cs35L/assign/coreutils.diff
+
+I then ran the patch command with -p0, as there are no slashes in the 
+patch that I want to remove in coreutils.diff
+
+patch -p0 < coreutils.diff
+
+After running the patch, I proceeded to follow the configure, make, 
+and make install steps that I had attempted previously:
+
+./configure --prefix=/u/cs/ugrad/minh/CS35L/Assignment4/InstallDir
+make
+make install
+
+Evaluating the diff file, I saw that the reason why are patch fixed our
+issue was because previous, futimens had conflicting types. Our patch
+fixed this issue by renaming futimens into coreutils_futiments
+
+I then proceeded by changing directory into my InstallDir, the directory
+to which I installed coreutils-with bug into. I then entered the commands
+outlined in the project specifications the replicate the error, as outlined
+in the specifications, making sure to put the directory to my ls command to
+reproduce the error with our coreutils-with-bug installation:
+
+$ tmp=$(mktemp -d)
+$ cd $tmp
+$ touch -d '1918-11-11 11:00 GMT' wwi-armistice-cs35L
+$ touch now
+$ sleep 1
+$ touch now1
+$ TZ=UTC0 /u/cs/ugrad/minh/CS35L/Assignment4/InstallDir/bin/ls -lt --full-time wwi-armistice-cs35L now now1
+
+The ouput appeared as followed, which coicides with the error outlined in
+the project specs:
+
+-rw-r--r-- 1 minh csugrad 0 1918-11-11 11:00:00.000000000 +0000 wwi-armistice-cs35L
+-rw-r--r-- 1 minh csugrad 0 2020-02-05 03:28:53.997332480 +0000 now1
+-rw-r--r-- 1 minh csugrad 0 2020-02-05 03:28:40.013865327 +0000 now
+
+To figure out where this error occured, I first opened up my debugging tool.
+I used gdb with the path of my ls command:
+
+gdb /u/cs/ugrad/minh/CS35L/Assignment4/InstallDir/bin/ls
+
+I opened up another terminal to examing the c file for ls. I changed directory
+into our coreutils-with-bug files, and I changed directory into src. Then
+I opened up the c file with emacs:
+
+cd coreutils-with-bug
+cd src
+emacs ls.c
+
+I then perused through the c file function declarations and found the function
+sort_files. Using my other terminal, I set a breakpoint to this function:
+
+break sort_file
+
+I then ran the ls command with the given arguments specified in the project
+by indicating the following lines:
+
+run -lt --full-time wwi-armistice-cs35L now now1
+
+I then utilized the command layout to showcase my code nicely:
+layout
+
+I then stepped into the function by indicating:
+si
+
+I then utilized the ni command until I saw something intiriguing. I did this
+until I found: switch(sort_type), which I stepped into:
+
+si
+
+I saw the conditional statement that said func=sort_reverse ? rev_cmp_mtime:
+compare_mtime;
+
+Since we know that our current sort is reversing the order, I decided to
+print out what the boolean for sort_reverse is to see which function would
+be called. The boolean came back as false, so I knew func would be set
+to compare_mtime. From there, I decided to restart gdb and put a break
+point at compare_mtime.
+
+gdb /u/cs/ugrad/minh/CS35L/Assignment4/InstallDir/bin/ls
+break compare_mtime
+run -lt --full-time wwi-armistice-cs35L now now1
+
+I the stepped into the function and saw that the line read:
+ /* Return negative, zero, positive if A < B, A == B, A > B, respectively
+  Assume the nanosecond components are in range, or close to it. */
+
+static inline int
+timespec_cmp (struct timespec a, struct timespec b)
+{
+ int diff = a.tv_sec - b.tv_sec;
+ return diff ? diff : a.tv_nsec - b.tv_nsec;
+}
+
+As we can see from the comment, the code is supposed to return the
+sign of the difference between a and b. Nevertheless, the issues with
+this code is that we are returning the difference of two numbers to denote
+the sign. From CS33, if two numbers are extremely large, we know we can
+get overflow, which means are signs are not as we expected them to be. 
+The goal, therefore, is to create code where overflow does not occur. I
+the adjusted the code as so:
+
+static inline int
+timespec_cmp (struct timespec a, struct timespec b){
+if (a.tv_sec < b.tv_sec) {
+   return -1;
+}
+else if (a.tv_sec > b.tv_sec) {
+   return 1;
+}
+else {
+  return 0;
+}
+}
+
+To create my diff file:
+
+I then entered my coreutils-with-bug directory. I then entered my lib
+directory. I proceeded to cp my timespec.h to the directory above it, and
+renamed it timespecEdit.h. Then, I implemented the changes I made above
+into timespecEdit.h. I then created a diff file to outline the differences
+between my timespecEdit.h and timespec.h
+
+cd coreutils-with-bug
+cd lib
+cp timespec.h ..
+mv timespec.h timespecEdit.h
+diff -u lib/timespec.h timespecEdit.h > sortPatch.diff
+
+From there, I formed a ChangeLog entry by indicating the following command
+in my sortPatch.diff file:
+C-x 4 a
+
+Currently, my sortPatch.diff has the line +++ timespecEdit.h, as that
+was the filepath to the name of the file that I made my adjustemnts to.
+In order to ensure that the changes of our diff are accurately made to our
+timespec.h, I changed this line to be the path:
+lib/timespec.h
+
+I then applied my patch:
+patch -p0 < sortPatch.diff
+
+I then proceeded to configure, make, and make install, as I had done
+previously:
+./configure --prefix=/u/cs/ugrad/minh/CS35L/Assignment4/InstallDir
+make
+make install
+
+I then changed directory into $tmp, and executed the following command:
+TZ=UTC0 /u/cs/ugrad/minh/CS35L/Assignment4/InstallDir/bin/ls -lt --full-time 
+wwi-armistice-cs35L now now1
+
+-rw-r--r-- 1 minh csugrad 0 2020-02-05 03:47:35.932846409 +0000 now1
+-rw-r--r-- 1 minh csugrad 0 2020-02-05 03:47:27.092550683 +0000 now
+-rw-r--r-- 1 minh csugrad 0 1918-11-11 11:00:00.000000000 +0000 
+wwi-armistice-Cs35L
+
+Evidently, our patch worked.
+
+Lastly, to test the efficacy of the SEASnet Linux servers, I created
+a directory and changed into it:
+
+mkdir tempDir
+cd tempDir
+
+I the executed the commands, as specified in the specs, to test the ls and
+touch commands as implemented in linux
+
+$ touch -d '1918-11-11 11:00 GMT' wwi-armistice-cs35L
+$ touch now
+$ sleep 1
+$ touch now1
+$ TZ=UTC0 ls -lt --full-time wwi-armistice-cs35L now now1
+
+-rw-r--r-- 1 minh csugrad 0 2054-12-17 17:28:16.000000000 +0000 wwi-armistice
+-cs35L
+-rw-r--r-- 1 minh csugrad 0 2020-02-05 05:34:31.000220000 +0000 now1
+-rw-r--r-- 1 minh csugrad 0 2020-02-05 05:33:41.430950000 +0000 now
+
+Evidently, the behavior of the seasnet made it so that our wwi-armistice
+-cs35l did not correctly store the time stamp of '1919-11-11 11:00 GMT'.
+The seasnet server was not able to store this extremely old time.
+The reason for this is because the temporary directory we created
+used a different bit system than our seasnet.  Specifically, 
+our seasnet uses 32 bits and utilizes unsigned data, while the local 
+directory we created uses 64 bits. Because of this, seasnet could 
+not properly display the value from the  past, given that the bits 
+that the system operates with is 32 bits and unsigned. 
